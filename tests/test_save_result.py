@@ -39,11 +39,9 @@ def test_file_contains_markdown_body(tmp_path):
 def test_skips_existing_file(tmp_path):
     save_result(FAKE_RESULT, RUN_DATE, tmp_path)
     path = tmp_path / "2026-04-15-ir-chipotle-com-news-releases.md"
-    original_mtime = path.stat().st_mtime
-
-    # Call again — should not overwrite
+    path.write_text("sentinel")          # overwrite with known content
     save_result(FAKE_RESULT, RUN_DATE, tmp_path)
-    assert path.stat().st_mtime == original_mtime
+    assert path.read_text() == "sentinel"  # proves the second call was a no-op
 
 
 def test_empty_markdown_still_creates_file(tmp_path):
