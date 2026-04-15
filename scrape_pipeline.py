@@ -56,7 +56,12 @@ if __name__ == "__main__":
     results = data["data"]["web"] # get the results from the response
     print(f"Firecrawl returned {len(results)} results")
 
+    out_dir = Path("knowledge/raw")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    run_date = datetime.date.today().isoformat()
+
     for r in results:
         print(f"  - {r['title']}")
         print(f"    {r['url']}")
         print(f"    markdown length: {len(r.get('markdown') or '')} chars")
+        save_result(r, run_date, out_dir)
