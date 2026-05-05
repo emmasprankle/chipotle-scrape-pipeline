@@ -1,0 +1,40 @@
+name: Weekly Firecrawl Scrape
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Mondays at 9 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scrape pipeline
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: python scrape_pipeline.py
+
+      - name: Commit new files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git status --porcelain knowledge/raw/ | grep -q '^'; then
+            git add knowledge/raw/
+            git commit -m "chore: weekly scrape $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "No new files to commit"
+          fi
