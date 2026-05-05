@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m venv venv)",
+      "Bash(venv/bin/pip install *)",
+      "Bash(venv/bin/python *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(venv/bin/pytest *)",
+      "Bash(git commit *)",
+      "Bash(git *)",
+      "mcp__firecrawl__firecrawl_search",
+      "Bash(python3 *)"
+    ]
+  }
+}
